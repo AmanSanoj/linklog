@@ -190,11 +190,3 @@ dist
 .svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,macos,node
-
-
-
-## linklog-specific
-
-**/.data
-.data
-.data/**
