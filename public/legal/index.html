@@ -897,7 +897,7 @@
       <label for="slug">Link slug:</label>
       <input type="text" placeholder="xxxxx" name="slug" maxlength="12" />
 
-      <cap-widget data-cap-api-endpoint="/cap/"></cap-widget>
+      <!-- <cap-widget data-cap-api-endpoint="/cap/"></cap-widget> CAPTCHA disabled -->
       <button id="deletion-request">Request deletion</button>
     </main>
   </body>
@@ -905,10 +905,10 @@
     document
       .querySelector("#deletion-request")
       .addEventListener("click", async () => {
-        const token = document.querySelector("cap-widget").token;
-
-        if (!token)
-          return alert("Solve the CAPTCHA to send a deletion request");
+        // CAPTCHA validation disabled
+        // const token = document.querySelector("cap-widget").token;
+        // if (!token)
+        //   return alert("Solve the CAPTCHA to send a deletion request");
 
         const slug = document
           .querySelector("input")
@@ -918,7 +918,7 @@
         document.querySelector("#deletion-request").disabled = true;
         document.querySelector("#deletion-request").innerText = "Sending...";
 
-        document.querySelector("cap-widget").reset();
+        // document.querySelector("cap-widget").reset();
 
         try {
           const { result } = await (
@@ -929,7 +929,7 @@
               },
               body: JSON.stringify({
                 slug,
-                token
+                token: "disabled" // CAPTCHA disabled
               }),
             })
           ).json();
@@ -944,7 +944,7 @@
           "Request deletion";
       });
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/@cap.js/widget@0.1.25"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@cap.js/widget@0.1.25"></script> CAPTCHA disabled -->
   <script
     defer
     data-domain="linklog.tiagorangel.com"

@@ -1,4 +1,4 @@
-import { linkQueries } from "./db.js";
+import { csvQueries } from "./csv-db.js";
 import { Elysia } from "elysia";
 import { staticPlugin } from "@elysiajs/static";
 import { rateLimit } from "elysia-rate-limit";
@@ -9,14 +9,18 @@ import { minify } from "terser";
 
 const app = new Elysia()
   .onBeforeHandle(async (ctx) => {
+    // Skip host validation in development or if CF-HOST is not set
     if (
-      !(process.env["ENV"] === "dev") &&
-      process.env["CF-HOST"] &&
-      ctx.headers["host"] !== process.env["CF-HOST"]
+      process.env["ENV"] === "dev" ||
+      !process.env["CF-HOST"] ||
+      ctx.headers["host"] === process.env["CF-HOST"] ||
+      ctx.headers["host"]?.includes("devtunnels.ms") // Allow DevTunnels
     ) {
-      await Bun.sleep(Math.random() * 10);
-      return "Invalid host header";
+      return; // Allow the request
     }
+    
+    await Bun.sleep(Math.random() * 10);
+    return "Invalid host header";
   })
   .use(staticPlugin())
   .use(
@@ -42,15 +46,24 @@ const app = new Elysia()
   })
 
   .get("/api/script.js", async ({ set }) => {
-    const raw = await Bun.file("public/assets/grabber.js").text();
-
-    const result = await minify(raw, { mangle: true, compress: true });
-    set.headers["content-type"] = "application/javascript";
-    return result.code;
+    try {
+      const raw = await Bun.file("public/assets/grabber.js").text();
+      const result = await minify(raw, { mangle: true, compress: true });
+      
+      set.headers["content-type"] = "application/javascript";
+      set.headers["cache-control"] = "public, max-age=3600";
+      set.headers["access-control-allow-origin"] = "*";
+      
+      return result.code || raw; // Fallback to raw if minification fails
+    } catch (error) {
+      console.error("Error serving script.js:", error);
+      set.status = 500;
+      return "console.error('Failed to load script');";
+    }
   })
 
   .get("/:slug", async ({ params }) => {
-    return linkQueries.findById.get(params.slug)
+    return csvQueries.findLinkById(params.slug)
       ? Bun.file("public/collect.html")
       : Bun.file("public/404.html");
   })

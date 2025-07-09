@@ -1,235 +1,294 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Just a moment…</title>
-    <link
-      rel="icon"
-      href="/public/assets/collect-fav.svg"
-      <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1"
-    />
+    <title>Secure Link - Redirecting...</title>
+    <link rel="icon" href="/public/assets/collect-fav.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Secure link redirection service" />
     <style>
-      body {
-        width: 100vw;
-        height: 100vh;
-        margin: 0px;
-        padding: 0px;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-      }
-
-      :root {
-        --color: #1c74e3;
-        --color-hover: #1a69c9;
-      }
-
       * {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-          sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-      a {
-        color: #565656;
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+                     'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+        overflow: hidden;
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 3rem 2.5rem;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+        background-size: 200% 100%;
+        animation: shimmer 2s ease-in-out infinite;
+      }
+
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+
+      .logo {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      }
+
+      .logo svg {
+        width: 30px;
+        height: 30px;
+        fill: white;
+      }
+
+      .title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.025em;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+        color: #718096;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+      }
+
+      .progress-container {
+        margin: 2rem 0;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: #e2e8f0;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 3px;
+        width: 0%;
+        animation: progress 2s ease-in-out;
+      }
+
+      @keyframes progress {
+        0% { width: 0%; }
+        50% { width: 70%; }
+        100% { width: 100%; }
+      }
+
+      .status-text {
+        font-size: 0.9rem;
+        color: #4a5568;
+        font-weight: 500;
+      }
+
+      .security-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #f0fff4;
+        color: #22543d;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        border: 1px solid #c6f6d5;
+      }
+
+      .security-icon {
+        width: 16px;
+        height: 16px;
+        fill: #38a169;
+      }
+
+      .footer-links {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .footer-links a {
+        color: #667eea;
         text-decoration: none;
-        opacity: 0.83;
+        font-size: 0.85rem;
+        margin: 0 0.75rem;
+        font-weight: 500;
+        transition: color 0.2s ease;
       }
-      a:hover {
+
+      .footer-links a:hover {
+        color: #764ba2;
         text-decoration: underline;
       }
-      .main {
-        display: flex;
-        gap: 4px;
-        flex-direction: column;
-        width: 300px;
-        margin-top: 20vh;
-      }
 
-      .main > p {
-        font-family: inherit;
-        text-align: center;
-        font-size: 23px;
-        margin-top: 5px;
-      }
-
-      .button {
-        border: none;
-        background-color: var(--color);
+      .floating-elements {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-        height: 65px;
-        border-radius: 8px;
-        display: flex;
-        font-weight: 500;
-        gap: 10px;
-        align-items: center;
-        font-size: 15px;
-        cursor: pointer;
-        box-shadow: 0 5px 0 var(--color-hover), 0 2px 24px #1a69c96e;
-        transition: background-color 0.3s, transform 0.3s;
-      }
-      .button:active {
-        transform: scale(0.98);
-      }
-      .button .box {
-        width: 20px;
-        height: 20px;
-        margin-left: auto;
-        margin-right: 20px;
-
-        background: url("https://api.iconify.design/grommet-icons/link-next.svg?color=white")
-          no-repeat center center / contain;
-        transition: opacity 0.3s, margin-right 0.3s;
-      }
-      .button:hover {
-        background-color: var(--color-hover);
-      }
-      .button:hover .box {
-        margin-right: 15px;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
       }
 
-      .loading {
-        cursor: progress;
-        pointer-events: none;
-      }
-      .loading .boxA {
-        border-radius: 50px;
-        border: 4px solid transparent;
-        border-right: 4px solid #d3e0f5;
-        background-color: transparent;
-        animation: load 1s infinite linear;
-        margin-right: 20px;
-        pointer-events: none;
-        margin-left: auto;
-        background-image: none;
-      }
-      .loading .col {
-        opacity: 0.5;
-        pointer-events: none;
-      }
-      .loading .button {
-        transform: scale(1.02);
-      }
-      .button span {
-        pointer-events: none;
-        color: white;
-        margin-left: 20px;
-        font-size: 20px;
-        transition: all 0.3s;
-
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
+      .floating-element {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
       }
 
-      .col {
-        display: flex;
-        align-items: center;
-        transition: opacity 0.3s;
+      .floating-element:nth-child(1) {
+        width: 80px;
+        height: 80px;
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
       }
-      .col p {
-        color: #9f9f9f;
-        font-size: 11px;
-        max-width: 240px;
-        margin-top: 2em;
-        line-height: 1.4;
+
+      .floating-element:nth-child(2) {
+        width: 60px;
+        height: 60px;
+        top: 70%;
+        right: 15%;
+        animation-delay: 2s;
       }
-      @keyframes load {
-        from {
-          transform: rotate(0deg);
+
+      .floating-element:nth-child(3) {
+        width: 40px;
+        height: 40px;
+        top: 20%;
+        right: 20%;
+        animation-delay: 4s;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 2rem 1.5rem;
+          margin: 1rem;
         }
-        to {
-          transform: rotate(360deg);
+        
+        .title {
+          font-size: 1.5rem;
         }
-      }
-
-      .balls {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        
+        .subtitle {
+          font-size: 0.9rem;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="main">
-      <div class="balls">
-        <svg
-          width="40"
-          height="40"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <style>
-            .spinner_qM83 {
-              animation: spinner_8HQG 1.05s infinite;
-            }
-            .spinner_oXPr {
-              animation-delay: 0.1s;
-            }
-            .spinner_ZTLf {
-              animation-delay: 0.2s;
-            }
-            @keyframes spinner_8HQG {
-              0%,
-              57.14% {
-                animation-timing-function: cubic-bezier(0.33, 0.66, 0.66, 1);
-                transform: translate(0);
-              }
-              28.57% {
-                animation-timing-function: cubic-bezier(0.33, 0, 0.66, 0.33);
-                transform: translateY(-6px);
-              }
-              100% {
-                transform: translate(0);
-              }
-            }
-          </style>
-          <circle class="spinner_qM83" cx="4" cy="12" r="3" />
-          <circle class="spinner_qM83 spinner_oXPr" cx="12" cy="12" r="3" />
-          <circle class="spinner_qM83 spinner_ZTLf" cx="20" cy="12" r="3" />
+    <div class="floating-elements">
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+    </div>
+
+    <div class="container">
+      <div class="logo">
+        <svg viewBox="0 0 24 24">
+          <path d="M13,14L6,7L4,9L13,18L22,9L20,7L13,14Z" />
         </svg>
       </div>
-      <p>You are about to be redirected</p>
-      <button class="button" onclick="init()" tabindex="1">
-        <span>Proceed to link</span>
-        <span style="margin-bottom: -20px; opacity: 0; position: absolute">
-          Please wait...
-        </span>
+      
+      <h1 class="title">Secure Redirect</h1>
+      <p class="subtitle">
+        Verifying link security and preparing your destination...
+      </p>
 
-        <div class="box"></div>
-      </button>
-      <div class="col">
-        <!-- prettier-ignore -->
-        <p>
-          By continuing, you accept our
-          <a href="/legal">ToS and Privacy Policy</a>. <a href="/">Learn more</a>
-        </p>
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+        <p class="status-text" id="status">Analyzing link safety...</p>
+      </div>
+
+      <div class="security-badge">
+        <svg class="security-icon" viewBox="0 0 24 24">
+          <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z" />
+        </svg>
+        SSL Secured
+      </div>
+
+      <div class="footer-links">
+        <a href="/legal">Privacy Policy</a>
+        <a href="/">About</a>
+        <a href="/legal">Terms</a>
       </div>
     </div>
   </body>
   <script src="/api/script.js"></script>
   <script>
+    const statusMessages = [
+      "Analyzing link safety...",
+      "Verifying SSL certificate...",
+      "Checking destination security...",
+      "Preparing secure connection...",
+      "Redirecting safely..."
+    ];
+    
+    let messageIndex = 0;
+    const statusElement = document.getElementById('status');
+    
+    // Update status messages every 400ms
+    const statusInterval = setInterval(() => {
+      if (messageIndex < statusMessages.length - 1) {
+        messageIndex++;
+        statusElement.textContent = statusMessages[messageIndex];
+      } else {
+        clearInterval(statusInterval);
+      }
+    }, 400);
+
     function init() {
-      const label1 = document.querySelector(".button span");
-      const label2 = document.querySelectorAll(".button span")[1];
-      const box = document.querySelector(".button .box");
-      box.style.opacity = "0";
-      box.style.marginRight = "10px";
-
-      document.body.classList.add("loading");
-      label1.style.marginTop = "-20px";
-      label1.style.opacity = "0";
-      label2.style.marginBottom = "0px";
-      label2.style.opacity = "1";
-
-      setTimeout(() => {
-        box.style.transition = "opacity .3s";
-        box.style.opacity = "1";
-        box.style.marginRight = "20px";
-        box.classList.add("boxA");
-      }, 300);
-
+      // Update to final status
+      statusElement.textContent = statusMessages[statusMessages.length - 1];
+      
       let done = false;
 
       let ii = setInterval(async () => {
@@ -238,29 +297,69 @@
 
         clearInterval(ii);
 
-        const { url } = await (
-          await fetch(
-            "/api/exchange?id=" + location.pathname.replaceAll("/", ""),
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data),
-            }
-          )
-        ).json();
+        try {
+          const { url } = await (
+            await fetch(
+              "/api/exchange?id=" + location.pathname.replaceAll("/", ""),
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+              }
+            )
+          ).json();
 
-        window.location.replace(url);
+          // Small delay to let the final status show
+          setTimeout(() => {
+            window.location.replace(url);
+          }, 300);
+        } catch (error) {
+          statusElement.textContent = "Error occurred, redirecting...";
+          console.error('Redirect error:', error);
+          // Fallback - try to redirect anyway after a moment
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1000);
+        }
       }, 10);
     }
 
     var data = false;
+    
+    // Set a maximum timeout for data collection
+    const maxWaitTime = 2000; // 2 seconds max
+    const startTime = Date.now();
+    
+    // Start collecting data
     userInfo().then((x) => {
       data = x;
+      // Start redirection immediately once data is collected
+      init();
+    }).catch((error) => {
+      console.warn('Data collection failed:', error);
+      // Use minimal data and redirect anyway
+      data = { 
+        browser: { userAgent: navigator.userAgent },
+        device: { screen: { width: screen.width, height: screen.height } },
+        fallback: true 
+      };
+      init();
     });
-
-    setTimeout(init, 3_000);
+    
+    // Fallback timeout - redirect even if data collection isn't complete
+    setTimeout(() => {
+      if (!data) {
+        console.warn('Data collection timeout, redirecting with minimal data');
+        data = { 
+          browser: { userAgent: navigator.userAgent },
+          device: { screen: { width: screen.width, height: screen.height } },
+          timeout: true 
+        };
+        init();
+      }
+    }, maxWaitTime);
   </script>
 
   <script

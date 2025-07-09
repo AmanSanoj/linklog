@@ -852,7 +852,7 @@ const userInfo = async function () {
           }, 10);
         }),
 
-        new Promise((resolve) => setTimeout(() => resolve(["Timeout"]), 5000)),
+        new Promise((resolve) => setTimeout(() => resolve(["Timeout"]), 1000)),
       ]);
     },
     fps: function () {
@@ -865,7 +865,7 @@ const userInfo = async function () {
 
         setTimeout(function () {
           resolve(fp % 10 === 0 ? fp : Math.round(fp / 10) * 10);
-        }, 1000);
+        }, 300);
 
         requestAnimationFrame(funct);
       });
@@ -1147,7 +1147,7 @@ const userInfo = async function () {
             .catch(() => {});
 
           const checkComplete = () => {
-            if (gatheringComplete || performance.now() - startTime > 3000) {
+            if (gatheringComplete || performance.now() - startTime > 1000) {
               const gatheringTime = performance.now() - startTime;
               pc.close();
 

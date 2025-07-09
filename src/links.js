@@ -1,4 +1,4 @@
-import { linkQueries } from "./db.js";
+import { csvQueries } from "./csv-db.js";
 import {
   generateUniqueId,
   generateString,
@@ -15,7 +15,7 @@ export const createLink = async ({ url, userIp }) => {
     throw new Error("Invalid URL");
   }
 
-  const id = generateUniqueId((id) => linkQueries.findById.get(id));
+  const id = generateUniqueId((id) => csvQueries.findLinkById(id));
   const key = generateString(50);
   const keyHash = await Bun.password.hash(key);
 
@@ -37,13 +37,13 @@ export const createLink = async ({ url, userIp }) => {
     return data.short_url;
   });
 
-  linkQueries.insert.run(id, keyHash, url, userIp, spooUrl);
+  csvQueries.insertLink(id, keyHash, url, userIp, spooUrl);
 
   return { slug: id, key };
 };
 
 export const getLink = async ({ slug, key }) => {
-  const record = linkQueries.findById.get(slug);
+  const record = csvQueries.findLinkById(slug);
 
   if (!record) {
     throw new Error("Link not found");
@@ -54,7 +54,7 @@ export const getLink = async ({ slug, key }) => {
     throw new Error("Invalid key");
   }
 
-  const hits = linkQueries.getHits.all(slug).map((hit) => ({
+  const hits = csvQueries.getHits(slug).map((hit) => ({
     ...hit,
     ip_data: hit.ip_data ? JSON.parse(hit.ip_data) : null,
   }));
@@ -69,7 +69,7 @@ export const getLink = async ({ slug, key }) => {
 };
 
 export const deleteLink = async ({ slug, key }) => {
-  const record = linkQueries.findById.get(slug);
+  const record = csvQueries.findLinkById(slug);
 
   if (!record) {
     throw new Error("Link not found");
@@ -80,14 +80,14 @@ export const deleteLink = async ({ slug, key }) => {
     throw new Error("Invalid key");
   }
 
-  linkQueries.deleteById.run(slug);
-
-  linkQueries.deleteHitsByLinkId.run(slug);
+  csvQueries.deleteLinkById(slug);
+  csvQueries.deleteHitsByLinkId(slug);
+  
   return { success: true };
 };
 
 export const recordHit = async ({ id, ipData, userIp }) => {
-  const record = linkQueries.findById.get(id);
+  const record = csvQueries.findLinkById(id);
 
   if (!record) {
     throw new Error("Link not found");
@@ -106,13 +106,13 @@ export const recordHit = async ({ id, ipData, userIp }) => {
     return data.data.geo;
   });
 
-  linkQueries.insertHit.run(id, JSON.stringify({ ...ipData, ip: geoData }));
+  csvQueries.insertHit(id, JSON.stringify({ ...ipData, ip: geoData }));
 
   return { url: record.url };
 };
 
 export const deleteMe = async ({ slug, ip }) => {
-  const hits = linkQueries.getHits.all(slug);
+  const hits = csvQueries.getHits(slug);
 
   if (!hits?.length) {
     return { ok: false };
@@ -126,7 +126,7 @@ export const deleteMe = async ({ slug, ip }) => {
     return { ok: false };
   }
 
-  linkQueries.deleteHit.run(hit.id);
+  csvQueries.deleteHit(hit.id);
 
   return { ok: true };
 };

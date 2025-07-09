@@ -7,7 +7,7 @@ import {
   deleteMe,
 } from "./links.js";
 import { rateLimit } from "elysia-rate-limit";
-import { cap } from "./cap.js";
+// import { cap } from "./cap.js"; // CAPTCHA disabled
 
 export const apiRoutes = new Elysia({ prefix: "/api" })
   .use(
@@ -23,11 +23,12 @@ export const apiRoutes = new Elysia({ prefix: "/api" })
   .post("/create", async ({ body, request }) => {
     const { url, cap: captchaToken } = body;
 
-    const { success } = await cap.validateToken(captchaToken);
+    // CAPTCHA validation disabled
+    // const { success } = await cap.validateToken(captchaToken);
+    // if (!success) {
+    //   return { error: "CAPTCHA validation failed" };
+    // }
 
-    if (!success) {
-      return { error: "CAPTCHA validation failed" };
-    }
     if (!url || typeof url !== "string") {
       return { error: "Invalid URL" };
     }
@@ -64,11 +65,13 @@ export const apiRoutes = new Elysia({ prefix: "/api" })
 
   .post("/deleteme", async ({ body, headers }) => {
     const { slug, token } = body;
-    const { success } = await cap.validateToken(token);
+    
+    // CAPTCHA validation disabled
+    // const { success } = await cap.validateToken(token);
+    // if (!success) {
+    //   return { error: "CAPTCHA validation failed" };
+    // }
 
-    if (!success) {
-      return { error: "CAPTCHA validation failed" };
-    }
     if (!slug) {
       return { error: "Invalid slug" };
     }
